@@ -27,6 +27,7 @@
             </p>
             <a id="audio-btn" class="button-primary-2 w-button">Turn on</a>
             <p id="gpt-answer"></p>
+            <p id="relatedQuestions"></p>
             </div>
 
         </div>
@@ -95,6 +96,7 @@
             if(response.ok) {
                 const responseJSON = await response.json();
                 gptAnswer.innerText = responseJSON.answer;
+                relatedQuestions.innerText = responseJSON.moreque;
                 
                 const message = new SpeechSynthesisUtterance(responseJSON.answer);
                 speechSynthesis.speak(message);
