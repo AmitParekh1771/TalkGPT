@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speak GPT</title>
+</head>
+<body>
+    <button id="audio-btn">Turn on</button>
+    <audio controls id="audio-player">
+        <source src="" type="audio/ogg">
+        Your browser does not support the audio tag.
+    </audio>
+    <p id="gpt-answer"></p>
+    <script>
+        const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
+        const SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList;
+        const SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+        const grammar = `#JSGF V1.0; grammar commands; public <command> = (hey chat GPT | hello GPT | hey speak GPT);`;
+
+        const recognition = new SpeechRecognition();
+        const speechRecognitionList = new SpeechGrammarList();
+        speechRecognitionList.addFromString(grammar, 1);
+        recognition.grammars = speechRecognitionList;
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        const audioBtn = document.getElementById('audio-btn');
+        const audioPlayer = document.getElementById('audio-player');
+        const gptAnswer = document.getElementById('gpt-answer');
+        let isRecording = false;
+        const stream = new MediaStream();
+        const recorder = new MediaRecorder(stream);
+
+        audioBtn.addEventListener('click', async (ev) => {
+            // isRecording = !isRecording;
+            // audioBtn.innerText = isRecording ? 'Turn off' : 'Turn on';
+            // if(!isRecording) {
+            //     stream.getAudioTracks().forEach(track => {
+            //         track.stop();
+            //         stream.removeTrack(track);
+            //     });
+            //     recorder.stop();
+            // }
+            // else {
+            //     (await navigator.mediaDevices.getUserMedia({ audio: true })).getAudioTracks().forEach(track => stream.addTrack(track));
+            //     recorder.start();
+            // }   
+            recognition.start();
+            console.log(stream.getTracks().length);
+        });
+
+        recorder.addEventListener('dataavailable', (ev) => {
+            console.log(ev);
+            audioPlayer.src = URL.createObjectURL(ev.data);
+
+        });
+
+        recognition.addEventListener('result', async (ev) => {
+            console.log(ev.results[0][0]);
+            const body = { prompt: ev.results[0][0].transcript };
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+            if(response.ok) {
+                const responseJSON = await response.json();
+                gptAnswer.innerText = responseJSON.answer;
+            }
+        });
+    </script>
+</body>
+</html>
