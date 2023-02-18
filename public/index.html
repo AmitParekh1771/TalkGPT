@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speak GPT</title>
+    <title>TalkGPT</title>
     <link
     href="./style.css"
     rel="stylesheet"
@@ -12,39 +12,22 @@
   />
 </head>
 <body>
-    <div class="w-nav">
-        <div class="w-container">
-          <a href="#" class="w-nav-brand"></a>
-          <nav role="navigation" class="navbar">
-            <a href="#" class="nav-link">Home</a>
-            <a href="#" class="nav-link">About</a>
-            <a href="./contact.html" class="nav-link">Contact</a>
-          </nav>
-  
-          <div class="w-nav-button">
-            <div class="w-icon-nav-menu"></div>
-          </div>
-        </div>
-        <div class="w-nav-overlay"></div>
-      </div>
+      <nav role="navigation" class="navbar">
+        <a href="./index.html" class="nav-link">Home</a>
+        <a href="./about.html" class="nav-link">About</a>
+        <a href="./contact.html" class="nav-link">Contact</a>
+      </nav>
   
       <section class="hero-without-image wf-section">
         <div class="container">
           <div class="hero-wrapper-two">
-            <h1>Ask TalkGPT&nbsp;anything!</h1>
+            <h1>Ask Talk<span style="color:#00A67E">GPT</span> anything!</h1>
             <p class="margin-bottom-24px">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-              tincidunt sagittis eros. Quisque quis euismod lorem. Etiam sodales
-              ac felis id interdum.
+              Click on the button below to talk with AI.
             </p>
-            <button id="audio-btn">Turn on</button>
-            <audio controls id="audio-player">
-            <source src="" type="audio/ogg">
-            Your browser does not support the audio tag.
-            </audio>
-    <p id="gpt-answer"></p>
-            <a href="#" class="button-primary-2 w-button"></a>
-                  </div>
+            <a id="audio-btn" class="button-primary-2 w-button">Turn on</a>
+            <p id="gpt-answer"></p>
+            </div>
 
         </div>
       </section>

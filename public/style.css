@@ -25,14 +25,17 @@ body {
 
   .navbar {
     display: flex;
-    justify-content: center;
+  justify-content: flex-start;
     background-color: #00A67E ;
-    padding: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
   }
   
   .nav-link {
     color: #fff;
     text-decoration: none;
+    margin-right: 1rem;
+
     margin: 0 10px;
     font-size: 20px;
   }
