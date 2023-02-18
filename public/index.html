@@ -5,14 +5,49 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speak GPT</title>
+    <link
+    href="./style.css"
+    rel="stylesheet"
+    type="text/css"
+  />
 </head>
 <body>
-    <button id="audio-btn">Turn on</button>
-    <audio controls id="audio-player">
-        <source src="" type="audio/ogg">
-        Your browser does not support the audio tag.
-    </audio>
+    <div class="w-nav">
+        <div class="w-container">
+          <a href="#" class="w-nav-brand"></a>
+          <nav role="navigation" class="navbar">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Contact</a>
+          </nav>
+  
+          <div class="w-nav-button">
+            <div class="w-icon-nav-menu"></div>
+          </div>
+        </div>
+        <div class="w-nav-overlay"></div>
+      </div>
+  
+      <section class="hero-without-image wf-section">
+        <div class="container">
+          <div class="hero-wrapper-two">
+            <h1>Ask TalkGPT&nbsp;anything!</h1>
+            <p class="margin-bottom-24px">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+              tincidunt sagittis eros. Quisque quis euismod lorem. Etiam sodales
+              ac felis id interdum.
+            </p>
+            <button id="audio-btn">Turn on</button>
+            <audio controls id="audio-player">
+            <source src="" type="audio/ogg">
+            Your browser does not support the audio tag.
+            </audio>
     <p id="gpt-answer"></p>
+            <a href="#" class="button-primary-2 w-button"></a>
+          </div>
+        </div>
+      </section>
+    
     <script>
         const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
         const SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList;
