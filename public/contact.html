@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Contact Us</title>
+    <link
+    href="./contact.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="navbar">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="index.html">Home</a></li>
+          <li class="nav-item active"><a href="contact.html">Contact</a></li>
+          <li class="nav-item"><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="main">
+      <h1 class="page-title">Contact Us</h1>
+      <form class="contact-form">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" id="name" name="name" class="form-input" required>
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" name="email" class="form-input" required>
+        <label for="subject" class="form-label">Subject</label>
+        <input type="text" id="subject" name="subject" class="form-input" required>
+        <label for="message" class="form-label">Message</label>
+        <textarea id="message" name="message" class="form-textarea" required></textarea>
+        <button type="submit" class="form-button">Send</button>
+      </form>
+    </main>
+    <footer class="footer">
+      <ul class="social-media-list">
+        <li class="social-media-item"><a href="#"><i class="fa fa-facebook"></i></a></li>
+        <li class="social-media-item"><a href="#"><i class="fa fa-twitter"></i></a></li>
+        <li class="social-media-item"><a href="#"><i class="fa fa-instagram"></i></a></li>
+      </ul>
+    </footer>
+  </body>
+</html>

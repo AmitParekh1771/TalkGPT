@@ -40,5 +40,19 @@ app.post('/ask', async (req, res) => {
 
 });
 
+// create a new instance of SpeechSynthesisUtterance
+// const utterance = new SpeechSynthesisUtterance();
+
+// // set the text to be spoken
+// utterance.text = "Hello, world!";
+
+// // set the voice
+// utterance.voice = speechSynthesis.getVoices()[0]; // change the index to select a different voice
+
+// // speak the text
+// speechSynthesis.speak(utterance);
+  
+
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));

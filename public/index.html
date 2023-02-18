@@ -18,7 +18,7 @@
           <nav role="navigation" class="navbar">
             <a href="#" class="nav-link">Home</a>
             <a href="#" class="nav-link">About</a>
-            <a href="#" class="nav-link">Contact</a>
+            <a href="./contact.html" class="nav-link">Contact</a>
           </nav>
   
           <div class="w-nav-button">
@@ -44,7 +44,8 @@
             </audio>
             <p id="gpt-answer"></p>
             <a href="#" class="button-primary-2 w-button"></a>
-          </div>
+                  </div>
+
         </div>
       </section>
     
@@ -52,6 +53,8 @@
         const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
         const SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList;
         const SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+        console.log(SpeechRecognition);
 
         const grammar = `#JSGF V1.0; grammar commands; public <command> = (hey chat GPT | hello GPT | hey speak GPT);`;
 
@@ -70,6 +73,7 @@
         let isRecording = false;
         const stream = new MediaStream();
         const recorder = new MediaRecorder(stream);
+
 
         audioBtn.addEventListener('click', async (ev) => {
             // isRecording = !isRecording;
@@ -108,6 +112,9 @@
             if(response.ok) {
                 const responseJSON = await response.json();
                 gptAnswer.innerText = responseJSON.answer;
+                
+                const message = new SpeechSynthesisUtterance(responseJSON.answer);
+                speechSynthesis.speak(message);
             }
         });
     </script>
