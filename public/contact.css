@@ -98,9 +98,30 @@ html {
     border-radius: 4px;
     margin-bottom: 16px;
   }
+
+  .navbar {
+    display: flex;
+  justify-content: flex-start;
+    background-color: #00A67E ;
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .nav-link {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 1rem;
+
+    margin: 0 10px;
+    font-size: 20px;
+  }
+  
+  .nav-link:hover {
+    text-decoration: underline;
+  }  
   
   .form-button {
-    background-color: #4CAF50;
+    background-color: #00A67E;
     color: #fff;
     padding: 8px 16px;
     border: none;

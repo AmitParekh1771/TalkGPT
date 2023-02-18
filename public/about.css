@@ -1,0 +1,101 @@
+/* Apply a reset to eliminate default styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Define general typography styles */
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  /* Header styles */
+  .header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+  }
+  
+  .navbar {
+    display: flex;
+  justify-content: flex-start;
+    background-color: #00A67E ;
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .nav-link {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 1rem;
+
+    margin: 0 10px;
+    font-size: 20px;
+  }
+  
+  .nav-link:hover {
+    text-decoration: underline;
+  }  
+  
+  /* Main styles */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  
+  .intro-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .intro-text {
+    font-size: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .team-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  
+  .team-member-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
+  
+  .team-member-name {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .team-member-title {
+    font-size: 18px;
+    color: #666;
+  }
+  
+  /* Footer styles */
+  .footer {
+    background-color: #eee;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .footer-text {
+    font-size: 16px;
+    color: #333;
+  }
+  
