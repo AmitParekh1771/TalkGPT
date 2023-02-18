@@ -1,116 +1,123 @@
+from flask import Flask, request, jsonify
+    
 import librosa
 import numpy as np
 import os
-import random
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
-# Define the dataset directory and the classes
-DATASET_DIR = 'data'
-CLASSES = ['01', '02']
+app = Flask(__name__)
 
-# Define the number of MFCC coefficients
-NUM_MFCC = 20
+@app.route("/login", methods=["POST"])
+def login():
+    if request.method == "POST":
+        if "file" not in request.files:
+            return "Error: No file provided"
+        
+        file = request.files["file"]
+        # Check if the file is a WAV file
+        if file.mimetype != "audio/wav":
+            return "Error: File is not a WAV file"
+        
+        # Save the file to disk
+        file.save("/uploads/audio.wav")
+        return jsonify({"message": "Success"})
+    else:
+        return jsonify({"message": "Error: Invalid request method"})
 
 
-# Load the data
-def load_data():
-    # Create empty lists for the data and the labels
-    data = []
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+data_dir = 'data'
+classes = ['01', '02', '03', '04', '05']
+X_train = []
+y_train = []
+X_test = []
+y_test = []
+
+n_mfcc = 13
+frames = 41
+n_fft = 2048
+hop_length = 512
+
+def trainModel():
+    # Define the parameters for the neural network
+    input_shape = (n_mfcc, frames, 1)
+    num_classes = len(classes)
+
+
+    # Load the audio files and extract the features
+    features = []
     labels = []
 
-    # Loop over the classes
-    for class_label in CLASSES:
-        # Get the directory path for the class
-        class_dir = os.path.join(DATASET_DIR, class_label)
-
-        # Loop over the audio files in the class directory
+    for c in classes:
+        class_dir = os.path.join(data_dir, c)
         for filename in os.listdir(class_dir):
-            # Load the audio file
-            filepath = os.path.join(class_dir, filename)
-            signal, sr = librosa.load(filepath)
+            file_path = os.path.join(class_dir, filename)
+            signal, sr = librosa.load(file_path, sr=None)
+            mfcc = librosa.feature.mfcc(signal, sr=sr, n_mfcc=n_mfcc, n_fft=n_fft, hop_length=hop_length)
+            mfcc = mfcc[:, :frames]
+            mfcc = np.pad(mfcc, ((0, 0), (0, frames - mfcc.shape[1])), mode='constant')
+            features.append(mfcc)
+            labels.append(classes.index(c))
 
-            # Extract the MFCC features
-            mfccs = librosa.feature.mfcc(signal, sr, n_mfcc=NUM_MFCC)
 
-            # Append the MFCC features and the label to the data and labels lists
-            data.append(mfccs.T)
-            labels.append(CLASSES.index(class_label))
+    # Convert the features and labels to NumPy arrays
+    X = np.array(features)
+    y = tf.keras.utils.to_categorical(labels, num_classes=num_classes)
 
-    # Convert the data and labels to numpy arrays
-    data = np.array(data)
-    labels = np.array(labels)
 
     # Split the data into training and testing sets
-    x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, random_state=42)
-
-    return x_train, y_train, x_test, y_test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
-# Define the neural network model
-def build_model():
+    # Define the neural network model
     model = tf.keras.Sequential([
-        tf.keras.layers.Input(shape=(None, NUM_MFCC)),
-        tf.keras.layers.Conv1D(filters=32, kernel_size=3, activation='relu'),
-        tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Conv1D(filters=64, kernel_size=3, activation='relu'),
-        tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape),
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(len(CLASSES), activation='softmax')
+        tf.keras.layers.Dense(num_classes, activation='softmax')
     ])
 
-    model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-    return model
-
-
-# Train the model
-def train_model(x_train, y_train, x_test, y_test):
-    # Build the model
-    model = build_model()
+    # Compile the model
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     # Train the model
-    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=100, batch_size=32)
-
-    # Evaluate the model on the test set
-    loss, accuracy = model.evaluate(x_test, y_test)
-
-    model.save('saved_model/voice_auth')
-
-    print(f'Test loss: {loss:.3f}, accuracy: {accuracy:.3f}')
+    model.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test), batch_size=16)
 
 
-# Load the data
-x_train, y_train, x_test, y_test = load_data()
-
-# Train the model
-train_model(x_train, y_train, x_test, y_test)
+    # Save the trained model
+    model.save('saved_models/model.h5')
 
 
-# # Define the number of MFCC coefficients
-# NUM_MFCC = 20
+def predict(file_path):
+    # Define the file path and class
+    # file_path = '05.wav'
 
-# # Load the audio sample
-# audio_path = 'path/to/audio/sample'
-# signal, sr = librosa.load(audio_path)
+    # Load the audio file and extract the features
+    signal, sr = librosa.load(file_path, sr=None)
+    mfcc = librosa.feature.mfcc(signal, sr=sr, n_mfcc=n_mfcc, n_fft=n_fft, hop_length=hop_length)
+    mfcc = mfcc[:, :frames]
+    mfcc = np.pad(mfcc, ((0, 0), (0, frames - mfcc.shape[1])), mode='constant')
 
-# # Extract the MFCC features
-# mfccs = librosa.feature.mfcc(signal, sr, n_mfcc=NUM_MFCC)
+    # Reshape the features to match the input shape of the model
+    mfcc = np.reshape(mfcc, (1, n_mfcc, frames, 1))
 
-# # Reshape the MFCC features to match the input shape of the model
-# mfccs = np.expand_dims(mfccs.T, axis=0)
+    # Use the model to predict the class of the audio file
+    model = tf.keras.models.load_model('saved_models/model.h5')
+    pred = model.predict(mfcc)[0]
+    class_idx = np.argmax(pred)
+    class_name = classes[class_idx]
 
-# # Load the trained model
-# model_path = 'saved_model/voice_auth'
-# model = tf.keras.models.load_model(model_path)
+    if pred[class_idx] < 0.5:
+        class_name = "unknown"
 
-# # Use the model to classify the audio sample
-# class_probabilities = model.predict(mfccs)
-# class_index = np.argmax(class_probabilities)
-# predicted_class = CLASSES[class_index]
+    return class_name
 
-# print(f'The predicted class is {predicted_class}.')
+def getMetrics():
+    model = tf.keras.models.load_model('saved_models/model.h5')
+    loss, accuracy = model.evaluate(X_test, y_test)
+    return loss, accuracy
