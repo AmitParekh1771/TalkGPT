@@ -25,20 +25,9 @@
             <p class="margin-bottom-24px">
               Click on the button below to talk with AI.
             </p>
-<<<<<<< HEAD
-            <button id="audio-btn">Turn on</button>
-            <audio controls id="audio-player">
-            <source src="" type="audio/ogg">
-            Your browser does not support the audio tag.
-            </audio>
-            <p id="gpt-answer"></p>
-            <a href="#" class="button-primary-2 w-button"></a>
-                  </div>
-=======
             <a id="audio-btn" class="button-primary-2 w-button">Turn on</a>
             <p id="gpt-answer"></p>
             </div>
->>>>>>> 7e557ee350344d51d6a5e0eb049447a39fa78d99
 
         </div>
       </section>
@@ -70,27 +59,8 @@
 
 
         audioBtn.addEventListener('click', async (ev) => {
-            // isRecording = !isRecording;
-            // audioBtn.innerText = isRecording ? 'Turn off' : 'Turn on';
-            // if(!isRecording) {
-            //     stream.getAudioTracks().forEach(track => {
-            //         track.stop();
-            //         stream.removeTrack(track);
-            //     });
-            //     recorder.stop();
-            // }
-            // else {
-            //     (await navigator.mediaDevices.getUserMedia({ audio: true })).getAudioTracks().forEach(track => stream.addTrack(track));
-            //     recorder.start();
-            // }   
             recognition.start();
             console.log(stream.getTracks().length);
-        });
-
-        recorder.addEventListener('dataavailable', (ev) => {
-            console.log(ev);
-            audioPlayer.src = URL.createObjectURL(ev.data);
-
         });
 
         recognition.addEventListener('result', async (ev) => {

@@ -5,29 +5,10 @@ import numpy as np
 import os
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-
-@app.route("/login", methods=["POST"])
-def login():
-    if request.method == "POST":
-        if "file" not in request.files:
-            return "Error: No file provided"
-        
-        file = request.files["file"]
-        # Check if the file is a WAV file
-        if file.mimetype != "audio/wav":
-            return "Error: File is not a WAV file"
-        
-        # Save the file to disk
-        file.save("/uploads/audio.wav")
-        return jsonify({"message": "Success"})
-    else:
-        return jsonify({"message": "Error: Invalid request method"})
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 data_dir = 'data'
@@ -121,3 +102,55 @@ def getMetrics():
     model = tf.keras.models.load_model('saved_models/model.h5')
     loss, accuracy = model.evaluate(X_test, y_test)
     return loss, accuracy
+
+
+@app.after_request
+def add_cors_headers(response):
+    # set the CORS headers
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, X-Auth-Token'
+
+    return response
+
+@app.route("/")
+def healthCheck():
+    return jsonify({"message": "it works"})
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    if request.method == "POST":
+        if "file" not in request.files:
+            return "Error: No file provided"
+        
+        file = request.files["file"]
+        # Check if the file is a WAV file
+        # if file.mimetype != "audio/wav":
+        #     return "Error: File is not a WAV file"
+        
+        # Save the file to disk
+        
+        file.save("uploads/audio.wav")
+
+        class_name = predict("uploads/audio.wav")
+
+        return jsonify({"message": "Success", "id": class_name})
+    else:
+        return jsonify({"message": "Error: Invalid request method"})
+
+
+
+@app.route("/train", methods=["POST"])
+def train():
+    if request.method == "POST":
+        trainModel()
+        return jsonify({"message": "Success"})
+    else:
+        return jsonify({"message": "Error: Invalid request method"})
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
