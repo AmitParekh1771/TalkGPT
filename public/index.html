@@ -4,19 +4,41 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speak GPT</title>
+    <title>TalkGPT</title>
+    <link
+    href="./style.css"
+    rel="stylesheet"
+    type="text/css"
+  />
 </head>
 <body>
-    <button id="audio-btn">Turn on</button>
-    <audio controls id="audio-player">
-        <source src="" type="audio/ogg">
-        Your browser does not support the audio tag.
-    </audio>
-    <p id="gpt-answer"></p>
+      <nav role="navigation" class="navbar">
+        <a href="./index.html" class="nav-link">Home</a>
+        <a href="./about.html" class="nav-link">About</a>
+        <a href="./contact.html" class="nav-link">Contact</a>
+      </nav>
+  
+      <section class="hero-without-image wf-section">
+        <div class="container">
+          <div class="hero-wrapper-two">
+            <h1>Ask Talk<span style="color:#00A67E">GPT</span> anything!</h1>
+            <p class="margin-bottom-24px">
+              Click on the button below to talk with AI.
+            </p>
+            <a id="audio-btn" class="button-primary-2 w-button">Turn on</a>
+            <p id="gpt-answer"></p>
+            <p id="relatedQuestions"></p>
+            </div>
+
+        </div>
+      </section>
+    
     <script>
         const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
         const SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList;
         const SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+        console.log(SpeechRecognition);
 
         const grammar = `#JSGF V1.0; grammar commands; public <command> = (hey chat GPT | hello GPT | hey speak GPT);`;
 
@@ -35,6 +57,7 @@
         let isRecording = false;
         const stream = new MediaStream();
         const recorder = new MediaRecorder(stream);
+
 
         audioBtn.addEventListener('click', async (ev) => {
             // isRecording = !isRecording;
@@ -73,6 +96,10 @@
             if(response.ok) {
                 const responseJSON = await response.json();
                 gptAnswer.innerText = responseJSON.answer;
+                relatedQuestions.innerText = responseJSON.moreque;
+                
+                const message = new SpeechSynthesisUtterance(responseJSON.answer);
+                speechSynthesis.speak(message);
             }
         });
     </script>

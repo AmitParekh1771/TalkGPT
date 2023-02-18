@@ -30,8 +30,17 @@ app.post('/ask', async (req, res) => {
             frequency_penalty: 0.6,
             presence_penalty: 0.6
         });
+        const moreques = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `Give me some more questions like ${prompt}`,
+            temperature: 0.9,
+            max_tokens: 150,
+            top_p: 1,
+            frequency_penalty: 0.6,
+            presence_penalty: 0.6
+        });
 
-        res.send({ answer: response.data.choices[0].text });
+        res.send({ answer: response.data.choices[0].text, moreque: moreques.data.choices[0].text });
 
     } catch (err) {
         console.log(err);
@@ -39,6 +48,20 @@ app.post('/ask', async (req, res) => {
     }
 
 });
+
+// create a new instance of SpeechSynthesisUtterance
+// const utterance = new SpeechSynthesisUtterance();
+
+// // set the text to be spoken
+// utterance.text = "Hello, world!";
+
+// // set the voice
+// utterance.voice = speechSynthesis.getVoices()[0]; // change the index to select a different voice
+
+// // speak the text
+// speechSynthesis.speak(utterance);
+  
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));

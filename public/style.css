@@ -1,0 +1,219 @@
+/* Set body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+  }
+  
+  /* Style the navigation bar */
+  .w-nav {
+    position: relative;
+    z-index: 1000;
+    background-color: #ffffff;
+    height: 60px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+  
+  .w-nav-brand {
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #000000;
+    text-decoration: none;
+    margin-top: 14px;
+  }
+
+  .navbar {
+    display: flex;
+  justify-content: flex-start;
+    background-color: #00A67E ;
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .nav-link {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 1rem;
+
+    margin: 0 10px;
+    font-size: 20px;
+  }
+  
+  .nav-link:hover {
+    text-decoration: underline;
+  }  
+  
+  .w-nav-menu {
+    float: right;
+    margin-top: 14px;
+  }
+  
+  .w-nav-link {
+    font-size: 16px;
+    font-weight: 500;
+    color: #000000;
+    margin-left: 20px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .w-nav-link:hover {
+    color: #5f5f5f;
+  }
+  
+  .w-nav-button {
+    display: none;
+  }
+  
+  /* Style the hero section */
+  .hero-heading-left {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    background-color: #ffffff;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .hero-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .hero-split {
+    width: 50%;
+    padding: 50px;
+  }
+  
+  h1 {
+    font-size: 48px;
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-weight: 700;
+    color: #000000;
+  }
+  
+  p {
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    color: #5f5f5f;
+  }
+  
+  .button-primary {
+    background-color: #00A67E;
+    color: #ffffff;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  .button-primary:hover {
+    background-color: #037157;
+  }
+
+  /* Center the hero content */
+.hero-wrapper-two {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Style the hero heading */
+.hero-wrapper-two h1 {
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Style the hero paragraph */
+.hero-wrapper-two p {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Style the hero button */
+.hero-wrapper-two a.button-primary-2 {
+  display: inline-block;
+  padding: 16px 24px;
+  background-color: #00A67E;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+/* Style the hero button hover */
+.hero-wrapper-two a.button-primary-2:hover {
+  background-color: #037157;
+}
+
+  
+  /* Style the mike button */
+  .button-primary.w-button::before {
+    content: "\f130";
+    font-family: FontAwesome;
+    font-size: 24px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    color: #fff;
+    margin-right: 6px;
+  }
+  
+  /* Style the hero split image */
+  .shadow-two {
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  /* img{
+    width: 25%;
+  } */
+
+  body > section > div > div > div:nth-child(2) > img {
+    width: 75%;
+  }
+  
+  /* Style the form elements */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  label {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Style the login and signup buttons */
+  
