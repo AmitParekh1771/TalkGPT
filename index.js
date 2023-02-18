@@ -30,8 +30,17 @@ app.post('/ask', async (req, res) => {
             frequency_penalty: 0.6,
             presence_penalty: 0.6
         });
+        const moreques = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `Give me some more questions like ${prompt}`,
+            temperature: 0.9,
+            max_tokens: 150,
+            top_p: 1,
+            frequency_penalty: 0.6,
+            presence_penalty: 0.6
+        });
 
-        res.send({ answer: response.data.choices[0].text });
+        res.send({ answer: response.data.choices[0].text, moreque: moreques.data.choices[0].text });
 
     } catch (err) {
         console.log(err);
