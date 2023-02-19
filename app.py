@@ -5,18 +5,18 @@ import numpy as np
 import os
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from flask_cors import CORS, cross_origin
+from sklearn.preprocessing import StandardScaler
+from flask_cors import CORS
+import pydub
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 data_dir = 'data'
-classes = ['01', '02', '03', '04', '05']
-X_train = []
-y_train = []
-X_test = []
-y_test = []
+classes = [
+    '01', '02', '03', '04', '05', '06', '07', '08', '09', '10'
+]
 
 n_mfcc = 13
 frames = 41
@@ -53,14 +53,20 @@ def trainModel():
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+    np.save('processed_data/X_train.npy', X_train)
+    np.save('processed_data/X_test.npy', X_test)
+    np.save('processed_data/y_train.npy', y_train)
+    np.save('processed_data/y_test.npy', y_test)
 
     # Define the neural network model
     model = tf.keras.Sequential([
         tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape),
         tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+        tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dense(num_classes, activation='softmax')
+        tf.keras.layers.Dense(num_classes, activation='sigmoid')
     ])
 
     # Compile the model
@@ -73,11 +79,18 @@ def trainModel():
     # Save the trained model
     model.save('saved_models/model.h5')
 
+    loss, accuracy = model.evaluate(X_test, y_test)
+    return jsonify({"loss": loss, "accuracy": accuracy})
 
 def predict(file_path):
     # Define the file path and class
     # file_path = '05.wav'
 
+    # print('------------------------------------')
+    # print(file_path)
+    # print('------------------------------------')
+    # processAudio(file_path)
+    
     # Load the audio file and extract the features
     signal, sr = librosa.load(file_path, sr=None)
     mfcc = librosa.feature.mfcc(signal, sr=sr, n_mfcc=n_mfcc, n_fft=n_fft, hop_length=hop_length)
@@ -97,11 +110,6 @@ def predict(file_path):
         class_name = "unknown"
 
     return class_name
-
-def getMetrics():
-    model = tf.keras.models.load_model('saved_models/model.h5')
-    loss, accuracy = model.evaluate(X_test, y_test)
-    return loss, accuracy
 
 
 @app.after_request
@@ -148,6 +156,15 @@ def train():
         return jsonify({"message": "Success"})
     else:
         return jsonify({"message": "Error: Invalid request method"})
+
+
+@app.route("/metrics")
+def getMetrics():
+    model = tf.keras.models.load_model('saved_models/model.h5')
+    X_test = np.load("processed_data/X_test.npy")
+    y_test = np.load("processed_data/y_test.npy")
+    loss, accuracy = model.evaluate(X_test, y_test)
+    return jsonify({"loss": loss, "accuracy": accuracy})
 
 
 
