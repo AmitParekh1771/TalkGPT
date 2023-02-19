@@ -26,7 +26,8 @@
               Click on the button below to talk with AI.
             </p>
             <a id="audio-btn" class="button-primary-2 w-button">Turn on</a>
-            <p id="gpt-answer"></p>
+            <p id="gpt-answer"></p><br>
+
             <p id="relatedQuestions"></p>
             </div>
 
@@ -40,12 +41,26 @@
 
         console.log(SpeechRecognition);
 
-        const grammar = `#JSGF V1.0; grammar commands; public <command> = (hey chat GPT | hello GPT | hey speak GPT);`;
+        const grammar = `#JSGF V1.0; grammar commands; public <command> = (navigate to <section>); public <section> = ( about | contact )`;
 
         const recognition = new SpeechRecognition();
         const speechRecognitionList = new SpeechGrammarList();
         speechRecognitionList.addFromString(grammar, 1);
         recognition.grammars = speechRecognitionList;
+
+        recognition.addEventListener('result', (event) => {
+          const transcript = event.results[0][0].transcript;
+          const sectionRegex = /navigate to (\w+)/;
+          const matches = sectionRegex.exec(transcript);
+          if (matches) {
+            const section = matches[1];
+            window.location.href = `/${section}`;
+            console.log(`Navigating to ${section}...`);
+            // Do something with the extracted keyword here
+          }
+        });
+
+
         recognition.continuous = false;
         recognition.lang = 'en-US';
         recognition.interimResults = false;
@@ -77,7 +92,7 @@
             if(response.ok) {
                 const responseJSON = await response.json();
                 gptAnswer.innerText = responseJSON.answer;
-                relatedQuestions.innerText = responseJSON.moreque;
+                relatedQuestions.innerText = "Here are some similar questions you can ask.\n" + responseJSON.moreque;
                 
                 const message = new SpeechSynthesisUtterance(responseJSON.answer);
                 speechSynthesis.speak(message);
