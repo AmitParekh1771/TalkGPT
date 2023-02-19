@@ -1,0 +1,85 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>TalkGPT</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="Webflow" name="generator" />
+    <link
+      href="/style.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  
+  <body>
+    <div class="w-nav">
+      <div class="w-container">
+        <a href="#" class="w-nav-brand"></a>
+        <nav role="navigation" class="navbar">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/about" class="nav-link">About</a>
+          <a href="/contact" class="nav-link">Contact</a>
+      </nav>
+        
+        <div class="w-nav-button">
+          <div class="w-icon-nav-menu"></div>
+        </div>
+      </div>
+      <div class="w-nav-overlay"></div>
+    </div>
+    
+    <div class="hero-split">
+      <h1>Login:</h1>
+      <p class="margin-bottom-24px">
+        Click on the mike button below and read the following code in the
+        microphone to authenticate yourself.
+      </p>
+      <p class="margin-bottom-24px">0123456789</p>
+      <button type="button" id="command-btn" class="button-primary w-button"></button>
+    </div>
+
+    <script>
+      const commandBtn = document.getElementById('command-btn');
+      let isRecording = false;
+      
+      const stream = new MediaStream();
+      const recorder = new MediaRecorder(stream);
+
+      commandBtn.addEventListener('click', async (ev) => {
+        isRecording = !isRecording;
+        if(!isRecording) {
+            stream.getAudioTracks().forEach(track => {
+                track.stop();
+                stream.removeTrack(track);
+            });
+            recorder.stop();
+        }
+        else {
+            (await navigator.mediaDevices.getUserMedia({ audio: true })).getAudioTracks().forEach(track => stream.addTrack(track));
+            recorder.start();
+        }   
+      });
+      
+      recorder.addEventListener('dataavailable', async (ev) => {
+        console.log(ev);
+        const data = [];
+        data.push(ev.data);
+        const file = new File([ev.data], 'audio.wav', {type: 'audio/wav'});
+        console.log(file.type);
+        const formData = new FormData();
+        formData.append('file', file, 'audio.wav');
+
+        const response = await fetch('http://127.0.0.1:5000/login', {
+          method: 'POST',
+          body: formData
+        });
+        if(response.ok) {
+          const responseJSON = await response.json();
+          console.log(responseJSON);
+          
+        }
+      });
+    </script>
+    
+  </body>
+  </html>
