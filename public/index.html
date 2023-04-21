@@ -41,14 +41,14 @@
 
         console.log(SpeechRecognition);
 
-        const grammar = `#JSGF V1.0; grammar commands; public <command> = (navigate to <section>); public <section> = ( about | contact )`;
+        const grammar = `#JSGF V1.0; grammar commands; public <command> = (navigate to <section>); public <section> = ( about | contact ); public <go_to_phrase> = (go to) *;`;
 
         const recognition = new SpeechRecognition();
         const speechRecognitionList = new SpeechGrammarList();
         speechRecognitionList.addFromString(grammar, 1);
         recognition.grammars = speechRecognitionList;
 
-        recognition.addEventListener('result', (event) => {
+        recognition.addEventListener('result', async (event) => {
           const transcript = event.results[0][0].transcript;
           const sectionRegex = /navigate to (\w+)/;
           const matches = sectionRegex.exec(transcript);
@@ -57,7 +57,36 @@
             window.location.href = `/${section}`;
             console.log(`Navigating to ${section}...`);
             // Do something with the extracted keyword here
+            return;
           }
+          
+          const urlRegex = /go to (\w+)/;
+          const urlMatches = urlRegex.exec(transcript);
+          console.log(urlMatches)
+          if (urlMatches) {
+            const section = urlMatches[1];
+            window.open(`https://${section}.com`, "_blank");
+            console.log(`Going to ${section}...`);
+            // Do something with the extracted keyword here
+            return;
+          }
+          console.log(event.results[0][0]);
+            const body = { prompt: event.results[0][0].transcript };
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+            if(response.ok) {
+                const responseJSON = await response.json();
+                gptAnswer.innerText = responseJSON.answer;
+                relatedQuestions.innerText = "Here are some similar questions you can ask.\n" + responseJSON.moreque;
+                
+                const message = new SpeechSynthesisUtterance(responseJSON.answer);
+                speechSynthesis.speak(message);
+            }
         });
 
 
@@ -79,25 +108,6 @@
             console.log(stream.getTracks().length);
         });
 
-        recognition.addEventListener('result', async (ev) => {
-            console.log(ev.results[0][0]);
-            const body = { prompt: ev.results[0][0].transcript };
-            const response = await fetch('/ask', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            });
-            if(response.ok) {
-                const responseJSON = await response.json();
-                gptAnswer.innerText = responseJSON.answer;
-                relatedQuestions.innerText = "Here are some similar questions you can ask.\n" + responseJSON.moreque;
-                
-                const message = new SpeechSynthesisUtterance(responseJSON.answer);
-                speechSynthesis.speak(message);
-            }
-        });
     </script>
 </body>
 </html>
